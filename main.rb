@@ -51,7 +51,12 @@ text =<<TEXT
 ほしのこひとり　おしろの　みはり
 TEXT
 
-html = text.split("\n\n")[0].chars[0, 48].map do |charactor|
+html = text.split("\n\n")
+.sample
+.gsub('　', '')
+.gsub("\n", '')
+.chars[0, 48]
+.map do |charactor|
   template.result_with_hash charactor:
 end.join
 
