@@ -1,6 +1,25 @@
 require 'js'
 require 'erb'
 
+class JS::Object
+  def method_missing(sym, *args, &block)
+    if self[sym].typeof == "function"
+      self.call(sym, *args, &block)
+    elsif sym.end_with? '='
+      # セッターであるはず
+      self.method(:[]=).call(sym.to_s.gsub!(/=$/, ''), *args)
+    else
+      # ゲッターと仮定して値をとってみる
+      v = self.method(:[]).call(sym)
+
+      # falsyな値がとれた時におかしな動作になるはず。
+      return v if v
+
+      super
+    end
+  end
+end
+
 template = ERB.new(<<~'END_HTML')
   <div class="charactor">
     <span>
@@ -51,15 +70,20 @@ text =<<TEXT
 ほしのこひとり　おしろの　みはり
 TEXT
 
-html = text.split("\n\n")
-.sample
-.gsub('　', '')
-.gsub("\n", '')
-.chars[0, 48]
-.map do |charactor|
-  template.result_with_hash charactor:
-end.join
+def init(text, template)
+  html = text.split("\n\n")
+  .sample
+  .gsub('　', '')
+  .gsub("\n", '')
+  .chars[0, 48]
+  .map do |charactor|
+    template.result_with_hash charactor:
+  end.join
 
-document = JS.global[:document]
-content = document.querySelector ".content"
-content[:innerHTML] = html
+  content = JS.global.document.querySelector ".content"
+  content.innerHTML = html
+end
+
+init(text, template)
+
+
