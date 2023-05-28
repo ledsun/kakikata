@@ -3,7 +3,9 @@ require 'erb'
 
 template = ERB.new(<<~'END_HTML')
   <div class="charactor">
-    <%= charactor %>
+    <span>
+      <%= charactor %>
+    </span>
   </div>
 END_HTML
 
