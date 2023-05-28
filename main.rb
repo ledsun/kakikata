@@ -4,17 +4,17 @@ require 'erb'
 class JS::Object
   def method_missing(sym, *args, &block)
     if self[sym].typeof == "function"
+      # 関数として定義されていたら、関数として呼び出す。
       self.call(sym, *args, &block)
     elsif sym.end_with? '='
-      # セッターであるはず
+      # =で終わるメソッドはセッター
       self.method(:[]=).call(sym.to_s.gsub!(/=$/, ''), *args)
+    elsif args.empty?
+      # 引数がなければゲッター
+      # JavaScriptのオブジェクトなので、存在しないプロパティを読んでもエラーにしない。undefiendを返す。
+      self.method(:[]).call(sym)
     else
-      # ゲッターと仮定して値をとってみる
-      v = self.method(:[]).call(sym)
-
-      # falsyな値がとれた時におかしな動作になるはず。
-      return v if v
-
+      # 引数がないメソッド呼び出しは method_missing
       super
     end
   end
