@@ -70,20 +70,28 @@ text =<<TEXT
 ほしのこひとり　おしろの　みはり
 TEXT
 
-def init(text, template)
-  html = text.split("\n\n")
-  .sample
-  .gsub('　', '')
-  .gsub("\n", '')
-  .chars[0, 48]
-  .map do |charactor|
-    template.result_with_hash charactor:
-  end.join
+def set(phrase, template)
+  html = phrase.gsub('　', '')
+               .gsub("\n", '')
+               .chars[0, 48]
+               .map { |charactor| template.result_with_hash charactor: }
+               .join
 
   content = JS.global.document.querySelector ".content"
   content.innerHTML = html
 end
 
+def init(text, template)
+  phrase =text.split("\n\n")
+              .sample
+
+  set phrase, template
+end
+
 init(text, template)
 
-
+JS.global.document.querySelector('button').addEventListener 'click' do
+  input = JS.global.document.querySelector 'input'
+  phrase = input.value.to_s
+  set phrase, template
+end
