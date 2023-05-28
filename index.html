@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,16 +10,43 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Klee+One&display=swap" rel="stylesheet">
   <style>
+    .page {
+      background-color: aliceblue;
+      height: 297mm;
+      padding-top: 15mm;
+      width: 210mm;
+    }
+
     .content {
+      color: gray;
+      display: flex;
+      flex-wrap: wrap;
       font-family: 'Klee One', cursive;
+      font-size: 30mm;
+      margin: 0mm 1mm;
       writing-mode: vertical-rl;
     }
+
+    .charactor {
+      border-style: solid;
+      border-width: 1mm;
+      border-color: black;
+      height: 30mm;
+      line-height: 32mm;
+      margin: 1mm 1.5mm;
+      width: 30mm;
+    }
   </style>
-   <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@2.0.0/dist/browser.script.iife.js"></script>
-   <script type="text/ruby" src="main.rb"></script>
+  <link href="print.css" media="print" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@2.0.0/dist/browser.script.iife.js"></script>
+  <script type="text/ruby" src="main.rb"></script>
 </head>
+
 <body>
-  <div class="content">
+  <div class="page">
+    <div class="content">
+    </div>
   </div>
 </body>
+
 </html>

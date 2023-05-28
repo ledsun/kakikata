@@ -2,8 +2,8 @@ require 'js'
 require 'erb'
 
 template = ERB.new(<<~'END_HTML')
-  <div>
-    <%= phrase %>
+  <div class="charactor">
+    <%= charactor %>
   </div>
 END_HTML
 
@@ -49,8 +49,8 @@ text =<<TEXT
 ほしのこひとり　おしろの　みはり
 TEXT
 
-html = text.split("\n\n").map do |phrase|
-  template.result_with_hash phrase:
+html = text.split("\n\n")[0].chars[0, 48].map do |charactor|
+  template.result_with_hash charactor:
 end.join
 
 document = JS.global[:document]

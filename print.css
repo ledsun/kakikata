@@ -1,0 +1,12 @@
+@page {
+	margin: 0mm 5mm;
+	size: A4 portrait;
+}
+
+.page {
+  background-color: white;
+}
+
+.content {
+  color: rgb(238, 238, 238);
+}
