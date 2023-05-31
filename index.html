@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
   <style>
     .control {
+      display: flex;
+      flex-direction: column;
+      font-size: xx-large;
       width: 210mm;
     }
 
@@ -47,7 +50,7 @@
       width: 30mm;
     }
 
-    .charactor span{
+    .charactor span {
       position: relative;
       margin: 0;
       z-index: 2;
@@ -60,6 +63,7 @@
       border: 1px dashed cyan;
       z-index: 1;
     }
+
     .charactor::before {
       width: 0;
       height: 100%;
@@ -71,11 +75,6 @@
       height: 0;
       top: 15mm;
     }
-
-    .statements {
-      width: 202mm;
-    }
-
   </style>
   <link href="print.css" media="print" rel="stylesheet" type="text/css" />
   <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@2.0.0/dist/browser.script.iife.js"></script>
