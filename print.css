@@ -3,15 +3,14 @@
 	size: A4 portrait;
 }
 
+.control {
+  display: none;
+}
+
 .page {
   background-color: transparent;
 }
 
 .content {
   color: rgba(238, 238, 238, 0.496);
-}
-
-input,
-button {
-  display: none;
 }

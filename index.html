@@ -13,7 +13,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Klee+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
   <style>
+    .control {
+      width: 210mm;
+    }
+
     .page {
       background-color: aliceblue;
       height: 297mm;
@@ -66,6 +71,11 @@
       height: 0;
       top: 15mm;
     }
+
+    .statements {
+      width: 202mm;
+    }
+
   </style>
   <link href="print.css" media="print" rel="stylesheet" type="text/css" />
   <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@2.0.0/dist/browser.script.iife.js"></script>
@@ -73,8 +83,11 @@
 </head>
 
 <body>
-  <input placeholder="れんしゅうしたいぶんをいれてね" style="width: 600px;">
-  <button>かきかえる</button>
+  <div class="control">
+    <textarea placeholder="れんしゅうしたいぶんをいれてね" class="statements"></textarea>
+    <button>かきかえる</button>
+  </div>
+
   <div class="page">
     <div class="content">
     </div>

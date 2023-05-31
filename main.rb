@@ -91,7 +91,7 @@ end
 init(text, template)
 
 JS.global.document.querySelector('button').addEventListener 'click' do
-  input = JS.global.document.querySelector 'input'
-  phrase = input.value.to_s
+  statements = JS.global.document.querySelector '.statements'
+  phrase = statements.value.to_s
   set phrase, template
 end
