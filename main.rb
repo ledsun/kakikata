@@ -28,7 +28,7 @@ template = ERB.new(<<~'END_HTML')
   </div>
 END_HTML
 
-text =<<TEXT
+text = <<TEXT
 もりのなか　もりの　おひめさまが
 まどから　かおを　のぞかせてみる
 すると　あさつゆの　おんなのこが
@@ -82,8 +82,8 @@ def set(phrase, template)
 end
 
 def init(text, template)
-  phrase =text.split("\n\n")
-              .sample
+  phrase = text.split("\n\n")
+               .sample
 
   set phrase, template
 end
