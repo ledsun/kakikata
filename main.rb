@@ -21,9 +21,9 @@ class JS::Object
 end
 
 template = ERB.new(<<~'END_HTML')
-  <div class="charactor">
+  <div class="character">
     <span>
-      <%= charactor %>
+      <%= character %>
     </span>
   </div>
 END_HTML
@@ -74,7 +74,7 @@ def set(phrase, template)
   html = phrase.gsub('　', '')
                .gsub("\n", '')
                .chars[0, 48]
-               .map { |charactor| template.result_with_hash charactor: }
+               .map { |character| template.result_with_hash character: }
                .join
 
   content = JS.global.document.querySelector ".content"
@@ -95,3 +95,4 @@ JS.global.document.querySelector('button').addEventListener 'click' do
   phrase = statements.value.to_s
   set phrase, template
 end
+

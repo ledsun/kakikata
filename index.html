@@ -44,7 +44,7 @@
       writing-mode: vertical-rl;
     }
 
-    .charactor {
+    .character {
       border-style: solid;
       border-width: 1mm;
       border-color: black;
@@ -55,27 +55,27 @@
       width: 30mm;
     }
 
-    .charactor span {
+    .character span {
       position: relative;
       margin: 0;
       z-index: 2;
     }
 
-    .charactor::before,
-    .charactor::after {
+    .character::before,
+    .character::after {
       content: "";
       position: absolute;
       border: 1px dashed cyan;
       z-index: 1;
     }
 
-    .charactor::before {
+    .character::before {
       width: 0;
       height: 100%;
       left: 15mm;
     }
 
-    .charactor::after {
+    .character::after {
       width: 100%;
       height: 0;
       top: 15mm;
