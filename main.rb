@@ -88,11 +88,16 @@ def init(text, template)
   set phrase, template
 end
 
-init(text, template)
-
 JS.global.document.querySelector('button').addEventListener 'click' do
   statements = JS.global.document.querySelector '.statements'
   phrase = statements.value.to_s
   set phrase, template
 end
 
+searchParams = JS.eval 'return new URLSearchParams(location.search)'
+if searchParams.has('phrase') == JS.eval('return true;')
+  phrase = searchParams.get('phrase').to_s
+  set phrase, template
+else
+  init text, template
+end
