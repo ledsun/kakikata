@@ -1,9 +1,13 @@
 require 'js'
 require 'erb'
 
+
 class JS::Object
   def method_missing(sym, *args, &block)
-    if self[sym].typeof == "function"
+    if sym == :new
+      # new で呼び出されたら、コンストラクタとして呼び出す。
+      JS.eval("return #{self.to_construct(args)}")
+    elsif self[sym].typeof == "function"
       # 関数として定義されていたら、関数として呼び出す。
       self.call(sym, *args, &block)
     elsif sym.end_with? '='
@@ -17,6 +21,30 @@ class JS::Object
       # 引数がないメソッド呼び出しは method_missing
       super
     end
+  end
+
+  # When call new, received self is like a 'function URLSearchParams() { [native code] }'
+  # so, we need to convert it to 'new URLSearchParams()'
+  def to_construct(args)
+    "new #{constructor_name}(#{to_js_argument_string(args)})"
+  end
+
+  def constructor_name
+    self.to_s.match(/function\s+([^(]+)/)[1].strip
+  end
+
+  # When call new, received argument is like a '["?phrase=%E3%81%82%E3%81%84%E3%81%86"]"
+  # But converting string strips double quotes, so we need to add double quotes.
+  def to_js_argument_string(args)
+    "#{args.map do
+      to_string_with_quote _1
+    end.join(', ')}"
+  end
+
+  # Convert to string with double quotes.
+  # Support Ruby String and JavaScript String both.
+  def to_string_with_quote(var)
+    var.is_a?(String) || var.typeof == "string" ? "\"#{var}\"" : var.to_s
   end
 end
 
@@ -94,7 +122,7 @@ JS.global.document.querySelector('button').addEventListener 'click' do
   set phrase, template
 end
 
-searchParams = JS.eval 'return new URLSearchParams(location.search)'
+searchParams = JS.global[:URLSearchParams].new(JS.global[:location][:search])
 if searchParams.has('phrase') == JS.eval('return true;')
   phrase = searchParams.get('phrase').to_s
   set phrase, template
