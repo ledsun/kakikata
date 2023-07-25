@@ -9,10 +9,6 @@ class JS::Object
     if sym.end_with? '='
       # =で終わるメソッドはセッター
       self.method(:[]=).call(sym.to_s.gsub!(/=$/, ''), *args)
-    elsif args.empty?
-      # 引数がなければゲッター
-      # JavaScriptのオブジェクトなので、存在しないプロパティを読んでもエラーにしない。undefiendを返す。
-      self.method(:[]).call(sym)
     else
       method_missing_original(sym, *args, &block)
     end
@@ -69,6 +65,13 @@ text = <<TEXT
 ほしのこひとり　おしろの　みはり
 TEXT
 
+# ブラウザのAPIを使いやすくするためのショートハンド定数
+module Document
+  def self.querySelector(selectors) = JS.global[:document].querySelector(selectors)
+end
+URLSearchParams = JS.global[:URLSearchParams]
+Location = JS.global[:location]
+
 def set(phrase, template)
   html = phrase.gsub('　', '')
                .gsub("\n", '')
@@ -76,7 +79,7 @@ def set(phrase, template)
                .map { |character| template.result_with_hash character: }
                .join
 
-  content = JS.global.document.querySelector ".content"
+  content = Document.querySelector ".content"
   content.innerHTML = html
 end
 
@@ -87,13 +90,13 @@ def init(text, template)
   set phrase, template
 end
 
-JS.global.document.querySelector('button').addEventListener 'click' do
-  statements = JS.global.document.querySelector '.statements'
+Document.querySelector('button').addEventListener 'click' do
+  statements = Document.querySelector '.statements'
   phrase = statements.value.to_s
   set phrase, template
 end
 
-searchParams = JS.global[:URLSearchParams].new(JS.global[:location][:search])
+searchParams = URLSearchParams.new(Location[:search])
 if searchParams.has?('phrase')
   phrase = searchParams.get('phrase').to_s
   set phrase, template
