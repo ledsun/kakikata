@@ -15,50 +15,6 @@ class JS::Object
   end
 end
 
-# おはなしのテキスト
-# 初期表示文字列の候補
-Text = <<TEXT
-もりのなか　もりの　おひめさまが
-まどから　かおを　のぞかせてみる
-すると　あさつゆの　おんなのこが
-そよかぜさんに　いわれておまいり
-
-おがわのほとり　あさつゆみんなで
-ひめさまの　きらきら　ふわふわな
-かみを　とかし　まっかなドレスと
-ぴかぴかのくつで　みじたくおわり
-
-おひめさまに　あまい　はちみつを
-さっと　もってくる　こけのこたち
-もんのそばの　こかげの　ひかげに
-したくされた　あさの　おしょくじ
-
-きらきらした　ふちの　こくばんに
-せっせと　てならいの　おひめさま
-からすせんせい　ほんを　くわえて
-ちえを　あれやこれや　たたきこむ
-
-おべんきょう　おわりに　こじかと
-こうさぎと　いっしょに　えんそく
-あと　ついてくる　りすに　ことり
-うきうきと　たのしい　おひめさま
-
-もりの　はずれ　こけが　ふかふか
-きのこのこが　すんでいる　ところ
-みいんな　たのしい　なかまたちで
-おはなし　するのが　その　やくめ
-
-あかりを　てにした　ほしのこたち
-もりのおくへ　ひめを　ごあんない
-くらがりのなか　ぶじ　おうちまで
-いっぱい　あそんで　もう　えがお
-
-もりの　いきもの　みんな　すやり
-おひめさまも　おやすみの　じかん
-よかぜが　そっと　ざわめいている
-ほしのこひとり　おしろの　みはり
-TEXT
-
 # ブラウザのAPIを使いやすくするためのショートハンド定数
 module Document
   def self.querySelector(selectors) = JS.global[:document].querySelector(selectors)
@@ -106,18 +62,70 @@ class Controller
   end
 end
 
-# 初期表示する文字列を取得する
-def initial_phrase
-  searchParams = URLSearchParams.new(Location[:search])
-  if searchParams.has? 'phrase'
-    searchParams.get('phrase')
-                .to_s
-  else
-    Text.split("\n\n")
-        .sample
+class App
+  # おはなしのテキスト
+  # 初期表示文字列の候補
+  Story = <<~TEXT
+  もりのなか　もりの　おひめさまが
+  まどから　かおを　のぞかせてみる
+  すると　あさつゆの　おんなのこが
+  そよかぜさんに　いわれておまいり
+
+  おがわのほとり　あさつゆみんなで
+  ひめさまの　きらきら　ふわふわな
+  かみを　とかし　まっかなドレスと
+  ぴかぴかのくつで　みじたくおわり
+
+  おひめさまに　あまい　はちみつを
+  さっと　もってくる　こけのこたち
+  もんのそばの　こかげの　ひかげに
+  したくされた　あさの　おしょくじ
+
+  きらきらした　ふちの　こくばんに
+  せっせと　てならいの　おひめさま
+  からすせんせい　ほんを　くわえて
+  ちえを　あれやこれや　たたきこむ
+
+  おべんきょう　おわりに　こじかと
+  こうさぎと　いっしょに　えんそく
+  あと　ついてくる　りすに　ことり
+  うきうきと　たのしい　おひめさま
+
+  もりの　はずれ　こけが　ふかふか
+  きのこのこが　すんでいる　ところ
+  みいんな　たのしい　なかまたちで
+  おはなし　するのが　その　やくめ
+
+  あかりを　てにした　ほしのこたち
+  もりのおくへ　ひめを　ごあんない
+  くらがりのなか　ぶじ　おうちまで
+  いっぱい　あそんで　もう　えがお
+
+  もりの　いきもの　みんな　すやり
+  おひめさまも　おやすみの　じかん
+  よかぜが　そっと　ざわめいている
+  ほしのこひとり　おしろの　みはり
+  TEXT
+
+  def initialize
+    view = View.new Document.querySelector('.content')
+    view.update Model.new(initial_phrase)
+    Controller.new view
+  end
+
+  private
+
+  # 初期表示する文字列を取得する
+  def initial_phrase
+    searchParams = URLSearchParams.new(Location[:search])
+    if searchParams.has? 'phrase'
+      searchParams.get('phrase')
+                  .to_s
+    else
+      Story.split("\n\n")
+          .sample
+    end
   end
 end
 
-view = View.new Document.querySelector('.content')
-view.update Model.new(initial_phrase)
-Controller.new view
+App.new
