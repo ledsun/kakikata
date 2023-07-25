@@ -1,7 +1,7 @@
 require 'js'
 require 'erb'
 
-
+# JS::Objectを拡張して、セッターを使えるようにする
 class JS::Object
   alias_method :method_missing_original, :method_missing
 
@@ -15,6 +15,7 @@ class JS::Object
   end
 end
 
+# 1文字分のHTMLテンプレート
 Template = ERB.new(<<~'END_HTML')
   <div class="character">
     <span>
@@ -23,6 +24,8 @@ Template = ERB.new(<<~'END_HTML')
   </div>
 END_HTML
 
+# おはなしのテキスト
+# 初期表示文字列の候補
 Text = <<TEXT
 もりのなか　もりの　おひめさまが
 まどから　かおを　のぞかせてみる
@@ -72,6 +75,7 @@ end
 URLSearchParams = JS.global[:URLSearchParams]
 Location = JS.global[:location]
 
+# 画面に表示する
 def set(phrase)
   html = phrase.gsub('　', '')
                .gsub("\n", '')
@@ -83,6 +87,7 @@ def set(phrase)
   content.innerHTML = html
 end
 
+# 初期表示する文字列を取得する
 def initial_phrase
   searchParams = URLSearchParams.new(Location[:search])
   if searchParams.has? 'phrase'
@@ -94,6 +99,7 @@ def initial_phrase
   end
 end
 
+# ボタンを押したときの挙動を定義する
 class Controller
   Document.querySelector('button').addEventListener 'click' do
     statements = Document.querySelector '.statements'
