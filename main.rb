@@ -15,7 +15,7 @@ class JS::Object
   end
 end
 
-template = ERB.new(<<~'END_HTML')
+Template = ERB.new(<<~'END_HTML')
   <div class="character">
     <span>
       <%= character %>
@@ -72,11 +72,11 @@ end
 URLSearchParams = JS.global[:URLSearchParams]
 Location = JS.global[:location]
 
-def set(template, phrase)
+def set(phrase)
   html = phrase.gsub('　', '')
                .gsub("\n", '')
                .chars[0, 48]
-               .map { |character| template.result_with_hash character: }
+               .map { |character| Template.result_with_hash character: }
                .join
 
   content = Document.querySelector ".content"
@@ -97,7 +97,7 @@ end
 Document.querySelector('button').addEventListener 'click' do
   statements = Document.querySelector '.statements'
   phrase = statements[:value].to_s
-  set template, phrase
+  set phrase
 end
 
-set template, initial_phrase
+set initial_phrase
