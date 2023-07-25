@@ -15,15 +15,6 @@ class JS::Object
   end
 end
 
-# 1文字分のHTMLテンプレート
-Template = ERB.new(<<~'END_HTML')
-  <div class="character">
-    <span>
-      <%= character %>
-    </span>
-  </div>
-END_HTML
-
 # おはなしのテキスト
 # 初期表示文字列の候補
 Text = <<TEXT
@@ -75,16 +66,44 @@ end
 URLSearchParams = JS.global[:URLSearchParams]
 Location = JS.global[:location]
 
-# 画面に表示する
-def set(phrase)
-  html = phrase.gsub('　', '')
-               .gsub("\n", '')
-               .chars[0, 48]
-               .map { |character| Template.result_with_hash character: }
-               .join
+Model = Data.define(:phrase)
 
-  content = Document.querySelector ".content"
-  content.innerHTML = html
+class View
+  # 1文字分のHTMLテンプレート
+  Template = ERB.new(<<~'END_HTML')
+  <div class="character">
+    <span>
+      <%= character %>
+    </span>
+  </div>
+  END_HTML
+
+  def initialize(html_element)
+    @html_element = html_element
+  end
+
+  # 画面に表示する
+  def update(model)
+    html = model.phrase
+                .gsub('　', '')
+                .gsub("\n", '')
+                .chars[0, 48]
+                .map { |character| Template.result_with_hash character: }
+                .join
+
+    @html_element.innerHTML = html
+  end
+end
+
+class Controller
+  def initialize(view)
+    # ボタンを押したときの挙動を定義する
+    Document.querySelector('button').addEventListener 'click' do
+      statements = Document.querySelector '.statements'
+      phrase = statements[:value].to_s
+      view.update Model.new(phrase)
+    end
+  end
 end
 
 # 初期表示する文字列を取得する
@@ -99,14 +118,6 @@ def initial_phrase
   end
 end
 
-# ボタンを押したときの挙動を定義する
-class Controller
-  Document.querySelector('button').addEventListener 'click' do
-    statements = Document.querySelector '.statements'
-    phrase = statements[:value].to_s
-    set phrase
-  end
-end
-
-set initial_phrase
-Controller.new
+view = View.new Document.querySelector('.content')
+view.update Model.new(initial_phrase)
+Controller.new view
