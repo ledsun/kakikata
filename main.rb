@@ -3,16 +3,10 @@ require 'erb'
 
 
 class JS::Object
+  alias_method :method_missing_original, :method_missing
+
   def method_missing(sym, *args, &block)
-    sym_str = sym.to_s
-    if sym_str.end_with?("?")
-      # When a JS method is called with a ? suffix, it is treated as a predicate method,
-      # and the return value is converted to a Ruby boolean value automatically.
-      self.call(sym_str[0..-2].to_sym, *args, &block) == JS::True
-    elsif self[sym].typeof == "function"
-      # 関数として定義されていたら、関数として呼び出す。
-      self.call(sym, *args, &block)
-    elsif sym.end_with? '='
+    if sym.end_with? '='
       # =で終わるメソッドはセッター
       self.method(:[]=).call(sym.to_s.gsub!(/=$/, ''), *args)
     elsif args.empty?
@@ -20,8 +14,7 @@ class JS::Object
       # JavaScriptのオブジェクトなので、存在しないプロパティを読んでもエラーにしない。undefiendを返す。
       self.method(:[]).call(sym)
     else
-      # 引数がないメソッド呼び出しは method_missing
-      super
+      method_missing_original(sym, *args, &block)
     end
   end
 end
