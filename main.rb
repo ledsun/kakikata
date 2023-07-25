@@ -23,7 +23,7 @@ template = ERB.new(<<~'END_HTML')
   </div>
 END_HTML
 
-text = <<TEXT
+Text = <<TEXT
 もりのなか　もりの　おひめさまが
 まどから　かおを　のぞかせてみる
 すると　あさつゆの　おんなのこが
@@ -83,11 +83,15 @@ def set(template, phrase)
   content.innerHTML = html
 end
 
-def init(text, template)
-  phrase = text.split("\n\n")
-               .sample
-
-  set template, phrase
+def initial_phrase
+  searchParams = URLSearchParams.new(Location[:search])
+  if searchParams.has? 'phrase'
+    searchParams.get('phrase')
+                .to_s
+  else
+    Text.split("\n\n")
+        .sample
+  end
 end
 
 Document.querySelector('button').addEventListener 'click' do
@@ -96,10 +100,4 @@ Document.querySelector('button').addEventListener 'click' do
   set template, phrase
 end
 
-searchParams = URLSearchParams.new(Location[:search])
-if searchParams.has? 'phrase'
-  phrase = searchParams.get('phrase').to_s
-  set template, phrase
-else
-  init text, template
-end
+set template, initial_phrase
