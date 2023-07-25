@@ -72,7 +72,7 @@ end
 URLSearchParams = JS.global[:URLSearchParams]
 Location = JS.global[:location]
 
-def set(phrase, template)
+def set(template, phrase)
   html = phrase.gsub('　', '')
                .gsub("\n", '')
                .chars[0, 48]
@@ -87,19 +87,19 @@ def init(text, template)
   phrase = text.split("\n\n")
                .sample
 
-  set phrase, template
+  set template, phrase
 end
 
 Document.querySelector('button').addEventListener 'click' do
   statements = Document.querySelector '.statements'
-  phrase = statements.value.to_s
-  set phrase, template
+  phrase = statements[:value].to_s
+  set template, phrase
 end
 
 searchParams = URLSearchParams.new(Location[:search])
-if searchParams.has?('phrase')
+if searchParams.has? 'phrase'
   phrase = searchParams.get('phrase').to_s
-  set phrase, template
+  set template, phrase
 else
   init text, template
 end
