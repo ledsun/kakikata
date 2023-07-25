@@ -94,10 +94,13 @@ def initial_phrase
   end
 end
 
-Document.querySelector('button').addEventListener 'click' do
-  statements = Document.querySelector '.statements'
-  phrase = statements[:value].to_s
-  set phrase
+class Controller
+  Document.querySelector('button').addEventListener 'click' do
+    statements = Document.querySelector '.statements'
+    phrase = statements[:value].to_s
+    set phrase
+  end
 end
 
 set initial_phrase
+Controller.new
