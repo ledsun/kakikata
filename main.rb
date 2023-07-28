@@ -43,6 +43,7 @@ class View
     html = model.phrase
                 .gsub('　', '')
                 .gsub("\n", '')
+                .ljust(48, ' ')
                 .chars[0, 48]
                 .map { |character| Template.result_with_hash character: }
                 .join
