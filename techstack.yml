@@ -1,11 +1,11 @@
 repo_name: ledsun/kakikata
-report_id: '0499cc72177a23e717bf6992e8c38222'
+report_id: 3c1b5a1cc4df853b36044499c25e26c1
 repo_type: Public
-timestamp: '2023-11-10T04:45:53+00:00'
+timestamp: '2023-12-14T10:09:58+00:00'
 requested_by: ledsun
 provider: github
 branch: main
-detected_tools_count: 4
+detected_tools_count: 5
 tools:
 - name: CSS 3
   description: The latest evolution of the Cascading Style Sheets language
@@ -46,3 +46,12 @@ tools:
   detection_source: ".github/workflows/static.yml"
   last_updated_by: shigeru.nakajima
   last_updated_on: 2023-05-29 09:02:44.000000000 Z
+- name: HTML
+  description: Hypertext Markup Language for creating web pages.
+  website_url: http://
+  open_source: false
+  hosted_saas: false
+  image_url: https://img.stackshare.io/service/2270/no-img-open-source.png
+  detection_source: index.html
+  last_updated_by: ledsun
+  last_updated_on: 2023-05-23 00:09:01.000000000 Z
