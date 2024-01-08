@@ -41,8 +41,7 @@ class View
   # 画面に表示する
   def update(model)
     html = model.phrase
-                .gsub('　', '')
-                .gsub("\n", '')
+                .gsub(/[^ぁ-んァ-ン一-龠々]/, '')
                 .ljust(48, ' ')
                 .chars[0, 48]
                 .map { |character| Template.result_with_hash character: }
