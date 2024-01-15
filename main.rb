@@ -22,8 +22,6 @@ end
 URLSearchParams = JS.global[:URLSearchParams]
 Location = JS.global[:location]
 
-Model = Data.define(:phrase)
-
 class View
   # 1文字分のHTMLテンプレート
   Template = ERB.new(<<~'END_HTML')
@@ -39,13 +37,12 @@ class View
   end
 
   # 画面に表示する
-  def update(model)
-    html = model.phrase
-                .gsub(/[^ぁ-んァ-ン一-龠々]/, '')
-                .ljust(48, ' ')
-                .chars[0, 48]
-                .map { |character| Template.result_with_hash character: }
-                .join
+  def update(phrase)
+    html = phrase.gsub(/[^ぁ-んァ-ン一-龠々]/, '')
+                 .ljust(48, ' ')
+                 .chars[0, 48]
+                 .map { |character| Template.result_with_hash character: }
+                 .join
 
     @html_element.innerHTML = html
   end
@@ -57,7 +54,7 @@ class Controller
     Document.querySelector('button').addEventListener 'click' do
       statements = Document.querySelector '.statements'
       phrase = statements[:value].to_s
-      view.update Model.new(phrase)
+      view.update phrase
     end
   end
 end
@@ -109,7 +106,7 @@ class App
 
   def initialize
     view = View.new Document.querySelector('.content')
-    view.update Model.new(initial_phrase)
+    view.update initial_phrase
     Controller.new view
   end
 
