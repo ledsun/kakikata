@@ -41,7 +41,7 @@ class App
     # 画面に表示する
     def update(phrase)
       pages = []
-      phrase.gsub(/[^ぁ-んァ-ン一-龠々]/, '')
+      phrase.gsub(/[^ぁ-んァ-ンー-龠々]/, '')
             .chars
             .each_slice(48) do |chars|
               # 1ページに表示する文字数は48文字。
