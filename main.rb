@@ -1,19 +1,33 @@
 require 'js/require_remote'
 
-# Kernel#require_relativeを動かすためのパッチを当てます。
-module Kernel
-  alias original_require_relative require_relative
-
-  def require_relative(path)
-    caller_path = caller_locations(1, 1).first.absolute_path || ''
-    dir = File.dirname(caller_path)
-    file = File.absolute_path(path, dir)
-
-    original_require_relative(file)
-  rescue LoadError
-    JS::RequireRemote.instance.load(path)
-  end
+class String
+  def to_snake_case = self.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
 end
 
-require_relative 'app'
+class Symbol
+  def to_snake_case = self.to_s.to_snake_case
+end
+
+# 定数名からモジュールをオートーロードします。
+def Object.const_missing(id)
+  module_name = id.to_snake_case
+  JS::RequireRemote.instance.load(module_name)
+  p "#{module_name} loaded!"
+
+  mod = const_get(id)
+  # 読み込んだモジュールに、サブモジュールのオートーロードを定義します。
+  mod.define_singleton_method(:const_missing) do |sub_id|
+    path = self.name.to_s.split('::')
+                         .map(&:to_snake_case)
+                         .join('/')
+    module_name = "#{path}/#{sub_id.to_snake_case}"
+    JS::RequireRemote.instance.load(module_name)
+    p "#{module_name} loaded!"
+
+    const_get(sub_id)
+  end
+
+  mod
+end
+
 App.new

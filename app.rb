@@ -1,6 +1,3 @@
-require_relative 'app/view'
-require_relative 'app/controller'
-require_relative 'app/story'
 
 # ブラウザのAPIを使いやすくするためのショートハンド定数
 URLSearchParams = JS.global[:URLSearchParams]
