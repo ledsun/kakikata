@@ -24,11 +24,19 @@ Location = JS.global[:location]
 
 class View
   # 1文字分のHTMLテンプレート
-  Template = ERB.new(<<~'END_HTML')
+  CharactorTemplate = ERB.new(<<~'END_HTML')
   <div class="character">
     <span>
       <%= character %>
     </span>
+  </div>
+  END_HTML
+
+  PageTemplate = ERB.new(<<~'END_HTML')
+  <div class="page">
+    <div class="grid">
+      <%= characters %>
+    </div>
   </div>
   END_HTML
 
@@ -38,13 +46,13 @@ class View
 
   # 画面に表示する
   def update(phrase)
-    html = phrase.gsub(/[^ぁ-んァ-ン一-龠々]/, '')
-                 .ljust(48, ' ')
-                 .chars[0, 48]
-                 .map { |character| Template.result_with_hash character: }
-                 .join
+    characters = phrase.gsub(/[^ぁ-んァ-ン一-龠々]/, '')
+                       .ljust(48, ' ')
+                       .chars[0, 48]
+                       .map { |character| CharactorTemplate.result_with_hash character: }
+                       .join
 
-    @html_element.innerHTML = html
+    @html_element.innerHTML = PageTemplate.result_with_hash characters: characters
   end
 end
 
@@ -105,7 +113,7 @@ class App
   TEXT
 
   def initialize
-    view = View.new Document.querySelector('.grid')
+    view = View.new Document.querySelector('.container')
     view.update initial_phrase
     Controller.new view
   end
