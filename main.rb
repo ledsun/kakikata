@@ -46,12 +46,19 @@ class View
 
   # 画面に表示する
   def update(phrase)
-    characters = phrase.gsub(/[^ぁ-んァ-ン一-龠々]/, '')
-                       .chars[0, 48]
-                       .map { |character| CharactorTemplate.result_with_hash character: }
-                       .join
+    pages = []
+    phrase.gsub(/[^ぁ-んァ-ン一-龠々]/, '')
+          .chars
+          .each_slice(48) do |chars|
+            # 1ページに表示する文字数は48文字。
+            # 48文字に満たない場合に左寄せで表示されます。
+            # 足りない場合は空文字で埋めます。
+            chars = chars.fill(nil, chars.length..47)
+            pages << chars.map { |character| CharactorTemplate.result_with_hash character: }
+                          .join
+          end
 
-    @html_element.innerHTML = PageTemplate.result_with_hash characters: characters
+    @html_element.innerHTML = pages.map { |characters| PageTemplate.result_with_hash characters: }
   end
 end
 
@@ -126,8 +133,7 @@ class App
       searchParams.get('phrase')
                   .to_s
     else
-      Story.split("\n\n")
-          .sample
+      Story
     end
   end
 end
