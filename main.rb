@@ -47,7 +47,6 @@ class View
   # 画面に表示する
   def update(phrase)
     characters = phrase.gsub(/[^ぁ-んァ-ン一-龠々]/, '')
-                       .ljust(48, ' ')
                        .chars[0, 48]
                        .map { |character| CharactorTemplate.result_with_hash character: }
                        .join
