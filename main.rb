@@ -105,7 +105,7 @@ class App
   TEXT
 
   def initialize
-    view = View.new Document.querySelector('.content')
+    view = View.new Document.querySelector('.grid')
     view.update initial_phrase
     Controller.new view
   end
