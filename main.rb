@@ -1,12 +1,16 @@
 require 'js/require_remote'
 
-class String
-  def to_snake_case = self.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
+module OrbitalRing
+  refine String do
+    def to_snake_case = self.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
+  end
+
+  refine Symbol do
+    def to_snake_case = self.to_s.to_snake_case
+  end
 end
 
-class Symbol
-  def to_snake_case = self.to_s.to_snake_case
-end
+using OrbitalRing
 
 # 定数名からモジュールをオートーロードします。
 def Object.const_missing(id)
