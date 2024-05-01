@@ -83,20 +83,9 @@ module OrbitalRing
       element = document.getElementById 'app_root'
       element.addEventListener "click" do |event|
         if event[:target].closest(selectors) != JS::Null
-          to_method(options[:to]).call event, options[:locals]
+          options[:to].call event, options[:locals]
         end
       end
-    end
-
-    private
-
-    def to_method(name)
-      module_name, method_name = name.split(".")
-      p module_name
-      mod = Object.const_get(module_name)
-
-      p mod
-      mod.method(method_name)
     end
   end
 
