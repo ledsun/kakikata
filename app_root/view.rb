@@ -3,7 +3,7 @@ require 'js'
 
 class View
   # 1文字分のHTMLテンプレート
-  CharactorTemplate = ERB.new(<<~'END_HTML')
+  CharacterTemplate = ERB.new(<<~'END_HTML')
   <div class="character">
     <span>
       <%= character %>
@@ -14,10 +14,17 @@ class View
   PageTemplate = ERB.new(<<~'END_HTML')
   <div class="page">
     <div class="grid">
-      <%= characters %>
+      <% characters.each do |character| %>
+        <%= View.render :Character, character: %>
+      <% end %>
     </div>
   </div>
   END_HTML
+
+  def self.render(template, locals)
+    template = const_get(template.to_s + 'Template')
+    template.result_with_hash(locals)
+  end
 
   def initialize(html_element)
     @html_element = html_element
@@ -33,10 +40,11 @@ class View
             # 48文字に満たない場合に左寄せで表示されます。
             # 足りない場合は空文字で埋めます。
             chars = chars.fill(nil, chars.length..47)
-            pages << chars.map { |character| CharactorTemplate.result_with_hash character: }
-                          .join
+            pages << chars
           end
 
-    @html_element[:innerHTML] = pages.map { |characters| PageTemplate.result_with_hash characters: }
+    @html_element[:innerHTML] = pages.map do |characters|
+      View.render :Page, characters:
+    end
   end
 end
