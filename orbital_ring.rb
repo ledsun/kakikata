@@ -82,13 +82,13 @@ module OrbitalRing
 
     def initialize
       Events.each do |event_name|
-        defiene_event event_name
+        define_event event_name
       end
     end
 
     private
 
-    def defiene_event(event_name)
+    def define_event(event_name)
       self.class.define_method(event_name) do |selectors, options|
         root.addEventListener event_name do |event|
           if event[:target].closest(selectors) != JS::Null
