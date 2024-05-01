@@ -2,17 +2,15 @@ require 'js/require_remote'
 
 module OrbitalRing
   module Util
-    refine Symbol do
-      def to_snake_case = self.to_s
-                              .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-                              .downcase
+    def self.to_snake_case(symbol)
+      symbol.to_s
+            .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+            .downcase
     end
   end
 
   class Loader
     attr_accessor :dir
-
-    using OrbitalRing::Util
 
     def setup
       Loader.define_const_missing Object, @dir
@@ -22,7 +20,7 @@ module OrbitalRing
 
     def self.define_const_missing(mod, dir)
       mod.define_singleton_method(:const_missing) do |id|
-        module_name = id.to_snake_case
+        module_name = Util.to_snake_case(id)
 
         JS::RequireRemote.instance.load("#{dir}/#{module_name}")
         p "#{module_name} loaded!"
