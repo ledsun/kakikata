@@ -4,10 +4,17 @@ require 'erb'
 
 class OrbitalRing
   include Singleton
-  attr_accessor :dir
+
+  def dir=(dir)
+    @dir = dir
+  end
+
+  def dir
+    @dir || 'app_root'
+  end
 
   def setup
-    OrbitalRing::Loader.new.setup @dir
+    OrbitalRing::Loader.new.setup dir
   end
 
   class Loader
