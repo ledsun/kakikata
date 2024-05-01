@@ -7,11 +7,11 @@ class OrbitalRing
 
   def dir = 'app_root'
 
-  def setup
-    OrbitalRing::Loader.new.setup dir
-  end
-
   class Loader
+    def self.setup
+      new.setup OrbitalRing.instance.dir
+    end
+
     def setup(dir)
       Loader.define_const_missing dir, Object
     end

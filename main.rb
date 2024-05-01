@@ -1,2 +1,2 @@
-OrbitalRing.instance.setup
+OrbitalRing::Loader.setup
 App.new
