@@ -17,7 +17,7 @@ class View
   private
 
   # ひらがな、カタカナ、漢字を抽出
-  def filter(phrase) = phrase.gsub /[^ぁ-んァ-ンー-龠々]/, ''
+  def filter(phrase) = phrase.gsub(/[^ぁ-んァ-ンー-龠々]/, '')
 
   # 48文字に満たない場合に左寄せで表示されます。
   # 右寄せするために、足りない文を空文字で埋めます。
