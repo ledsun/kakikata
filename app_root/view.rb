@@ -12,7 +12,7 @@ class View
                           .map { |chars| fill chars }
 
     @html_element[:innerHTML] = pages.map do |characters|
-      render :Page, characters:
+      render :page, characters:
     end
   end
 
