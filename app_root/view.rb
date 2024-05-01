@@ -11,9 +11,7 @@ class View
                           .each_slice(48) # 1ページに表示する文字数は48文字
                           .map { |chars| fill chars }
 
-    @html_element[:innerHTML] = pages.map do |characters|
-      render :page, characters:
-    end
+    @html_element[:innerHTML] = render :content, pages:
   end
 
   private
