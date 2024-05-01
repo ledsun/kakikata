@@ -1,20 +1,6 @@
 require 'erb'
 require 'js'
 
-# JS::Objectを拡張して、セッターを使えるようにする
-class JS::Object
-  alias_method :method_missing_original, :method_missing
-
-  def method_missing(sym, *args, &block)
-    if sym.end_with? '='
-      # =で終わるメソッドはセッター
-      self.method(:[]=).call(sym.to_s.gsub!(/=$/, ''), *args)
-    else
-      method_missing_original(sym, *args, &block)
-    end
-  end
-end
-
 class View
   # 1文字分のHTMLテンプレート
   CharactorTemplate = ERB.new(<<~'END_HTML')
@@ -51,6 +37,6 @@ class View
                           .join
           end
 
-    @html_element.innerHTML = pages.map { |characters| PageTemplate.result_with_hash characters: }
+    @html_element[:innerHTML] = pages.map { |characters| PageTemplate.result_with_hash characters: }
   end
 end
