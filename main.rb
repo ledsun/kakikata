@@ -12,35 +12,34 @@ module OrbitalRing
   end
 
   class Loader
+    attr_accessor :dir
+
     using OrbitalRing::Util
 
     def setup
-      # 定数名からモジュールをオートーロードします。
-      def Object.const_missing(id)
+      Loader.define_const_missing Object, @dir
+    end
+
+    private
+
+    def self.define_const_missing(mod, dir)
+      mod.define_singleton_method(:const_missing) do |id|
         module_name = id.to_snake_case
-        JS::RequireRemote.instance.load(module_name)
+
+        JS::RequireRemote.instance.load("#{dir}/#{module_name}")
         p "#{module_name} loaded!"
 
-        mod = const_get(id)
-        # 読み込んだモジュールに、サブモジュールのオートーロードを定義します。
-        mod.define_singleton_method(:const_missing) do |sub_id|
-          path = self.name.to_s.split('::')
-                               .map(&:to_snake_case)
-                               .join('/')
-          module_name = "#{path}/#{sub_id.to_snake_case}"
-          JS::RequireRemote.instance.load(module_name)
-          p "#{module_name} loaded!"
-
-          const_get(sub_id)
-        end
-
-        mod
+        loaded_module = const_get(id)
+        Loader.define_const_missing loaded_module, dir
+        loaded_module
       end
     end
   end
 end
 
+
 loader = OrbitalRing::Loader.new
+loader.dir = 'app_root'
 loader.setup
 
 App.new
