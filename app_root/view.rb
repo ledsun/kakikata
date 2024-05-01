@@ -1,6 +1,21 @@
 require 'erb'
 require 'js'
 
+module OrbitalRing
+  class Renderer
+    include Singleton
+
+    def self.render(template, locals)
+      self.instance.render template, locals
+    end
+
+    def render(template, locals)
+      template = View.const_get(template.to_s + 'Template')
+      template.result_with_hash(locals)
+    end
+  end
+end
+
 class View
   # 1文字分のHTMLテンプレート
   CharacterTemplate = ERB.new(<<~'END_HTML')
@@ -15,16 +30,11 @@ class View
   <div class="page">
     <div class="grid">
       <% characters.each do |character| %>
-        <%= View.render :Character, character: %>
+        <%= OrbitalRing::Renderer.render :Character, character: %>
       <% end %>
     </div>
   </div>
   END_HTML
-
-  def self.render(template, locals)
-    template = const_get(template.to_s + 'Template')
-    template.result_with_hash(locals)
-  end
 
   def initialize(html_element)
     @html_element = html_element
@@ -44,7 +54,7 @@ class View
           end
 
     @html_element[:innerHTML] = pages.map do |characters|
-      View.render :Page, characters:
+      OrbitalRing::Renderer.render :Page, characters:
     end
   end
 end
