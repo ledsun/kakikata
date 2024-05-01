@@ -4,6 +4,8 @@ require 'erb'
 
 module OrbitalRing
   class Loader
+    include Singleton
+
     attr_accessor :dir
 
     def setup
@@ -47,7 +49,7 @@ module OrbitalRing
 
     def load_template(template_name)
       # テンプレート名から、ファイル名を決定します。
-      url = "app_root/#{Util.to_snake_case(template_name)}.html.erb"
+      url = "#{OrbitalRing::Loader.instance.dir}/#{Util.to_snake_case(template_name)}.html.erb"
       response = JS.global.fetch(url).await
       raise "Failed to fetch template: #{url}" unless response[:status].to_i == 200
 
