@@ -72,6 +72,34 @@ module OrbitalRing
     end
   end
 
+  class Routes
+    def self.draw(&block)
+      instance = self.new
+      instance.instance_eval(&block)
+    end
+
+    def click(selectors, options)
+      document = JS.global[:document]
+      element = document.getElementById 'app_root'
+      element.addEventListener "click" do |event|
+        if event[:target].closest(selectors) != JS::Null
+          to_method(options[:to]).call event, options[:locals]
+        end
+      end
+    end
+
+    private
+
+    def to_method(name)
+      module_name, method_name = name.split(".")
+      p module_name
+      mod = Object.const_get(module_name)
+
+      p mod
+      mod.method(method_name)
+    end
+  end
+
   module Util
     def self.to_snake_case(symbol)
       symbol.to_s
