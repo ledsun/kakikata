@@ -13,7 +13,7 @@ class View
           .each_slice(48) do |chars|
             # 1ページに表示する文字数は48文字。
             # 48文字に満たない場合に左寄せで表示されます。
-            # 足りない場合は空文字で埋めます。
+            # 右寄せするために、足りない場合は空文字で埋めます。
             chars = chars.fill(nil, chars.length..47)
             pages << chars
           end
