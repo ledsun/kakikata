@@ -2,12 +2,10 @@ require 'js/require_remote'
 
 module OrbitalRing
   module Util
-    refine String do
-      def to_snake_case = self.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
-    end
-
     refine Symbol do
-      def to_snake_case = self.to_s.to_snake_case
+      def to_snake_case = self.to_s
+                              .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+                              .downcase
     end
   end
 
@@ -36,4 +34,3 @@ module OrbitalRing
     end
   end
 end
-
