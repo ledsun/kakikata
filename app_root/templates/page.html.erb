@@ -1,7 +1,5 @@
 <div class="page">
   <div class="grid">
-    <% characters.each do |character| %>
-      <%= render :character, character: %>
-    <% end %>
+    <%= render :character, collection: page %>
   </div>
 </div>

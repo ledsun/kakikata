@@ -39,7 +39,12 @@ module OrbitalRing
       tempaltes_cache[template_name] = load_template(template_name) unless tempaltes_cache[template_name]
 
       if(locals[:collection])
-        locals[:collection].map { render_one(template_name, _1) }
+        # コレクションを渡してテンプレートを呼び出すと
+        # テンプレートからは、テンプレートと同じ名前の変数を経由してコレクションの個別のメンバーにアクセスできます。
+        locals[:collection].map do
+           render_one template_name,
+                      { template_name.to_s => _1 }
+        end.join
       else
         render_one(template_name, locals)
       end
