@@ -1,5 +1,5 @@
-loader = OrbitalRing::Loader.instance
-loader.dir = 'app_root'
-loader.setup
+ring = OrbitalRing.instance
+ring.dir = 'app_root'
+ring.setup
 
 App.new

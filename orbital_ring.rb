@@ -2,14 +2,17 @@ require 'js'
 require 'js/require_remote'
 require 'erb'
 
-module OrbitalRing
+class OrbitalRing
+  include Singleton
+  attr_accessor :dir
+
+  def setup
+    OrbitalRing::Loader.new.setup @dir
+  end
+
   class Loader
-    include Singleton
-
-    attr_accessor :dir
-
-    def setup
-      Loader.define_const_missing @dir, Object
+    def setup(dir)
+      Loader.define_const_missing dir, Object
     end
 
     private
@@ -55,7 +58,7 @@ module OrbitalRing
     def load_template(template_name)
       # テンプレート名から、ファイル名を決定します。
       feature_name = "#{Util.to_snake_case(template_name)}.html.erb"
-      path = "#{OrbitalRing::Loader.instance.dir}/templates"
+      path = "#{OrbitalRing.instance.dir}/templates"
       url = "#{path}/#{feature_name}"
       response = JS.global.fetch(url).await
       raise "Failed to fetch template: #{url}" unless response[:status].to_i == 200
@@ -100,7 +103,7 @@ module OrbitalRing
 
     def root
       document = JS.global[:document]
-      document.getElementById 'app_root'
+      document.getElementById OrbitalRing.instance.dir
     end
   end
 
