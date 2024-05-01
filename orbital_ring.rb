@@ -96,7 +96,7 @@ class OrbitalRing
       self.class.define_method(event_name) do |selectors, options|
         root.addEventListener event_name do |event|
           if event[:target].closest(selectors) != JS::Null
-            options[:to].call event, options[:locals]
+            options[:to].call event, options[:params]
           end
         end
       end

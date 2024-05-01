@@ -1,8 +1,8 @@
 module ClickHandler
-  def self.call(event, locals)
+  def self.call(event, params)
     statements = Document.querySelector '.statements'
     phrase = statements[:value].to_s
 
-    locals[:view].update phrase
+    params[:view].update phrase
   end
 end

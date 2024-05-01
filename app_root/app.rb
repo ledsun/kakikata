@@ -8,6 +8,7 @@ class App
   def initialize
     view = View.new Document.querySelector('.container')
     view.update initial_phrase
+
     Controller.new view
   end
 
