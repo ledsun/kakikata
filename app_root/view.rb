@@ -9,33 +9,30 @@ module OrbitalRing
       self.instance.render template, locals
     end
 
-    def render(template, locals)
-      template = View.const_get(template.to_s + 'Template')
-      template.result_with_hash(locals)
+    def render(template_name, locals)
+      unless  @templates[template_name]
+        url = "app_root/#{Util.to_snake_case(template_name)}.html.erb"
+        response = JS.global.fetch(url).await
+
+        if response[:status].to_i != 200
+          raise "Failed to fetch template: #{url}"
+        end
+
+        template_string = response.text().await.to_s
+        template = ERB.new(template_string)
+        @templates[template_name] = template
+      end
+
+      @templates[template_name].result_with_hash(locals)
+    end
+
+    def initialize
+      @templates = {}
     end
   end
 end
 
 class View
-  # 1文字分のHTMLテンプレート
-  CharacterTemplate = ERB.new(<<~'END_HTML')
-  <div class="character">
-    <span>
-      <%= character %>
-    </span>
-  </div>
-  END_HTML
-
-  PageTemplate = ERB.new(<<~'END_HTML')
-  <div class="page">
-    <div class="grid">
-      <% characters.each do |character| %>
-        <%= OrbitalRing::Renderer.render :Character, character: %>
-      <% end %>
-    </div>
-  </div>
-  END_HTML
-
   def initialize(html_element)
     @html_element = html_element
   end
