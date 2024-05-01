@@ -7,19 +7,23 @@ class View
 
   # 画面に表示する
   def update(phrase)
-    pages = []
-    phrase.gsub(/[^ぁ-んァ-ンー-龠々]/, '')
-          .chars
-          .each_slice(48) do |chars|
-            # 1ページに表示する文字数は48文字。
-            # 48文字に満たない場合に左寄せで表示されます。
-            # 右寄せするために、足りない場合は空文字で埋めます。
-            chars = chars.fill(nil, chars.length..47)
-            pages << chars
-          end
+    pages = filter(phrase).chars
+                          .each_slice(48) # 1ページに表示する文字数は48文字
+                          .map { |chars| fill chars }
 
     @html_element[:innerHTML] = pages.map do |characters|
       render :Page, characters:
     end
   end
+
+  private
+
+  # ひらがな、カタカナ、漢字を抽出
+  def filter(phrase)
+    phrase.gsub(/[^ぁ-んァ-ンー-龠々]/, '')
+  end
+
+  # 48文字に満たない場合に左寄せで表示されます。
+  # 右寄せするために、足りない文を空文字で埋めます。
+  def fill(chars) = chars.fill(nil, chars.length..47)
 end
