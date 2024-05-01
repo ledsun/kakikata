@@ -38,11 +38,11 @@ module OrbitalRing
     def render(template_name, locals)
       tempaltes_cache[template_name] = load_template(template_name) unless tempaltes_cache[template_name]
 
-      # テンプレート内でrenderメソッドを使えるようにするために
-      # このメソッドのbindingを指定します。
-      b = binding
-      locals.each { |key, value| b.local_variable_set key, value }
-      tempaltes_cache[template_name].result b
+      if(locals[:collection])
+        locals[:collection].map { render_one(template_name, _1) }
+      else
+        render_one(template_name, locals)
+      end
     end
 
     private
@@ -56,6 +56,14 @@ module OrbitalRing
       raise "Failed to fetch template: #{url}" unless response[:status].to_i == 200
 
       ERB.new(response.text().await.to_s)
+    end
+
+    def render_one(template_name, locals)
+      # テンプレート内でrenderメソッドを使えるようにするために
+      # このメソッドのbindingを指定します。
+      b = binding
+      locals.each { |key, value| b.local_variable_set key, value }
+      tempaltes_cache[template_name].result b
     end
   end
 

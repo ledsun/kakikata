@@ -10,8 +10,9 @@ class View
     pages = filter(phrase).chars
                           .each_slice(48) # 1ページに表示する文字数は48文字
                           .map { |chars| fill chars }
+                          .map { |characters| {characters:} }
 
-    @html_element[:innerHTML] = render :content, pages:
+    @html_element[:innerHTML] = render :page, collection: pages
   end
 
   private
