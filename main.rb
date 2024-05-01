@@ -1,4 +1,2 @@
-ring = OrbitalRing.instance
-ring.setup
-
+OrbitalRing.instance.setup
 App.new
