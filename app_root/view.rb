@@ -20,7 +20,11 @@ module OrbitalRing
         @templates[template_name] = template
       end
 
-      @templates[template_name].result_with_hash(locals)
+      b = binding
+      locals.each do |key, value|
+        b.local_variable_set key, value
+      end
+      @templates[template_name].result b
     end
 
     def initialize

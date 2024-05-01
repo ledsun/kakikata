@@ -1,7 +1,7 @@
 <div class="page">
   <div class="grid">
     <% characters.each do |character| %>
-      <%= OrbitalRing::Renderer.render :Character, character: %>
+      <%= render :Character, character: %>
     <% end %>
   </div>
 </div>
