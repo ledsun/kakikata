@@ -5,13 +5,7 @@ require 'erb'
 class OrbitalRing
   include Singleton
 
-  def dir=(dir)
-    @dir = dir
-  end
-
-  def dir
-    @dir || 'app_root'
-  end
+  def dir = 'app_root'
 
   def setup
     OrbitalRing::Loader.new.setup dir
