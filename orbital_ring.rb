@@ -49,7 +49,9 @@ module OrbitalRing
 
     def load_template(template_name)
       # テンプレート名から、ファイル名を決定します。
-      url = "#{OrbitalRing::Loader.instance.dir}/#{Util.to_snake_case(template_name)}.html.erb"
+      feature_name = "#{Util.to_snake_case(template_name)}.html.erb"
+      path = "#{OrbitalRing::Loader.instance.dir}/templates"
+      url = "#{path}/#{feature_name}"
       response = JS.global.fetch(url).await
       raise "Failed to fetch template: #{url}" unless response[:status].to_i == 200
 
