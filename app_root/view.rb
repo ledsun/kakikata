@@ -10,13 +10,10 @@ module OrbitalRing
     end
 
     def render(template_name, locals)
-      unless  @templates[template_name]
+      unless @templates[template_name]
         url = "app_root/#{Util.to_snake_case(template_name)}.html.erb"
         response = JS.global.fetch(url).await
-
-        if response[:status].to_i != 200
-          raise "Failed to fetch template: #{url}"
-        end
+        raise "Failed to fetch template: #{url}" unless response[:status].to_i == 200
 
         template_string = response.text().await.to_s
         template = ERB.new(template_string)
