@@ -73,19 +73,34 @@ module OrbitalRing
   end
 
   class Routes
+    Events = ['click', 'change', 'input']
+
     def self.draw(&block)
       instance = self.new
       instance.instance_eval(&block)
     end
 
-    def click(selectors, options)
-      document = JS.global[:document]
-      element = document.getElementById 'app_root'
-      element.addEventListener "click" do |event|
-        if event[:target].closest(selectors) != JS::Null
-          options[:to].call event, options[:locals]
+    def initialize
+      Events.each do |event_name|
+        defiene_event event_name
+      end
+    end
+
+    private
+
+    def defiene_event(event_name)
+      self.class.define_method(event_name) do |selectors, options|
+        root.addEventListener event_name do |event|
+          if event[:target].closest(selectors) != JS::Null
+            options[:to].call event, options[:locals]
+          end
         end
       end
+    end
+
+    def root
+      document = JS.global[:document]
+      document.getElementById 'app_root'
     end
   end
 
